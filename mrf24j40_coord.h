@@ -6,17 +6,10 @@
 
 #define MRF_MAX_CLIENTS 0x04
 
-typedef struct {
-  DeviceAddress addr;
-  uint32_t time;
-} Client2;
-
 class MRFCoord : public MRFDriver {
   private:
-  uint32_t _beacon_timer;
-  
-  uint8_t client_cnt;
-  Client2 client_list[MRF_MAX_CLIENTS];
+  byte client_cnt;
+  Node client_list[MRF_MAX_CLIENTS];
   
   public:
   MRFCoord(int pin_cs, int pin_int);
@@ -24,14 +17,14 @@ class MRFCoord : public MRFDriver {
   uint8_t _udp_pending;
   byte udp_buffer[64];
   
-  //uint8_t _rx_count;
-  
-  void init_coord(void);
+  void init(void);
   void coord_loop(void);
   void udp_to_mrf(int packetSize, byte* packetBuffer) ;
+  void send_clients(void);
 	
   void tx_beacon(void);
   void tx_assoc_resp(DeviceAddress dest_addr);
+  void tx_data_cmd(DeviceAddress dest_addr, byte data_cmd);
   
   void rx_packet(void);
   void rx_mac(void);
